@@ -33,11 +33,7 @@ dialog{border:0;border-radius:22px;padding:0;max-width:520px;width:calc(100% - 2
 <p class="note">※ 부산광역시 시·군·구 행정경계 형태를 적용한 웹용 맛지도입니다. 구·군을 누르면 해당 지역 맛집이 표시됩니다.</p>
 <div class="controls"><button class="chip active" id="all">📍 부산 전체</button></div>
 
-<div class="tools">
-<button class="tool" id="exportBtn">📤 맛집 백업</button>
-<button class="tool" id="importBtn">📥 백업 불러오기</button>
-<input id="importFile" type="file" accept="application/json" hidden>
-</div>
+<div class="tools"><button class="tool" id="loginBtn">🔐 관리자 로그인</button><button class="tool" id="logoutBtn" hidden>로그아웃</button><span id="authState" class="note"></span></div>
 <div class="head"><h2 id="title">부산 전체 맛집</h2><span id="count"></span></div><div class="dongs" id="dongs"></div><div class="grid" id="cards"></div>
 </main>
 <button class="fab" id="addBtn">＋ 맛집 등록</button>
@@ -56,62 +52,39 @@ dialog{border:0;border-radius:22px;padding:0;max-width:520px;width:calc(100% - 2
 </div>
 <div class="modal-actions"><button type="button" class="cancel" id="cancelBtn">취소</button><button class="primary" type="submit">저장</button></div>
 </form></div></dialog>
-<footer>맛지도 제작자 꾸꾸 · BUSAN FOOD MAP</footer>
-
+<dialog id="loginDialog"><div class="modal"><h2>관리자 로그인</h2>
+<form id="log<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const seedRestaurants=[
-{name:"개미집",gu:"연제구",dong:"거제동",cat:"한식",menu:"낙곱새",note:"거제동 방문 맛집.",url:"#"},
-{name:"수매풍",gu:"연제구",dong:"거제동",cat:"한식",menu:"대표메뉴 입력",note:"방문 정보를 추가해 주세요.",url:"#"},
-{name:"동래밀면",gu:"동래구",dong:"수안동",cat:"밀면·면요리",menu:"물밀면 · 비빔밀면 · 만두",note:"부산 수안동 밀면 맛집 기록.",url:"https://m.blog.naver.com/ntop8153/224363038507"},
-{name:"돼지 한마리",gu:"동래구",dong:"수안동",cat:"고기",menu:"삼겹살",note:"수안동에서 즐기는 돼지고기 맛집.",url:"https://m.blog.naver.com/ntop8153/224355697527"}
-];
-const STORAGE="kkukkuRestaurantsV6";
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function normalized(r){return {...r,id:r.id||uid(),name:r.name||"",gu:r.gu||"",dong:r.dong||"",cat:r.cat||"기타",menu:r.menu||"",note:r.note||"",url:r.url||"#"}}
-let restaurants;
-try{
- const saved=JSON.parse(localStorage.getItem(STORAGE)||"null");
- restaurants=Array.isArray(saved)?saved.map(normalized):seedRestaurants.map(normalized);
-}catch(e){restaurants=seedRestaurants.map(normalized)}
-function save(){localStorage.setItem(STORAGE,JSON.stringify(restaurants))}
-let gu="전체",dong="전체";
-const cards=document.querySelector("#cards"),dongs=document.querySelector("#dongs");
+const SUPABASE_URL="https://nmftzhlyjcusupyavntm.supabase.co";
+const SUPABASE_KEY="sb_publishable_PKgjuuBZBZPe9tBdYstgpg_cRCPB9Gm";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let restaurants=[],session=null,gu="전체",dong="전체";
+const cards=document.querySelector("#cards"),dongs=document.querySelector("#dongs"),dlg=document.querySelector("#restaurantDialog"),form=document.querySelector("#restaurantForm");
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function render(){
- const q=document.querySelector("#search").value.trim().toLowerCase();
- let base=restaurants.filter(r=>gu==="전체"||r.gu===gu);
- const ds=[...new Set(base.map(r=>r.dong).filter(Boolean))].sort();dongs.innerHTML="";
- if(gu!=="전체")["전체",...ds].forEach(d=>{let b=document.createElement("button");b.className="chip"+(dong===d?" active":"");b.textContent=d;b.onclick=()=>{dong=d;render()};dongs.appendChild(b)});
- const list=base.filter(r=>(dong==="전체"||r.dong===dong)&&(!q||[r.name,r.gu,r.dong,r.cat,r.menu,r.note].join(" ").toLowerCase().includes(q)));
- document.querySelector("#title").textContent=(gu==="전체"?"부산 전체":gu)+(dong==="전체"?"":" · "+dong)+" 맛집";
- document.querySelector("#count").textContent=list.length+"곳";
- cards.innerHTML=list.length?list.map(r=>`<article class="card"><span class="badge">${esc(r.cat)}</span><h3>${esc(r.name)}</h3><div class="meta">📍 ${esc(r.gu)} ${esc(r.dong)}<br>🍴 ${esc(r.menu)}</div><div class="review">${esc(r.note)}</div>${r.url&&r.url!=="#"?`<a class="link" href="${esc(r.url)}" target="_blank" rel="noopener">블로그 후기 보기 →</a>`:""}<div class="card-actions"><button class="mini" onclick="editRestaurant('${r.id}')">수정</button><button class="mini" onclick="deleteRestaurant('${r.id}')">삭제</button></div></article>`).join(""):`<div class="empty">아직 등록된 맛집이 없습니다.<br><b>＋ 맛집 등록</b>으로 추가해 보세요.</div>`;
-}
-document.querySelectorAll(".region").forEach(r=>{r.onclick=()=>{gu=r.dataset.gu;dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.toggle("active",x===r));document.querySelector("#all").classList.remove("active");render()}});
-document.querySelector("#all").onclick=()=>{gu="전체";dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.remove("active"));document.querySelector("#all").classList.add("active");render()};
-document.querySelector("#search").oninput=render;
-
-const dlg=document.querySelector("#restaurantDialog"), form=document.querySelector("#restaurantForm");
 const guNames=["강서구","금정구","기장군","남구","동구","동래구","부산진구","북구","사상구","사하구","서구","수영구","연제구","영도구","중구","해운대구"];
 document.querySelector("#fGu").innerHTML='<option value="">구·군 선택 *</option>'+guNames.map(x=>`<option>${x}</option>`).join("");
-function openForm(r=null){
- form.reset();document.querySelector("#editId").value=r?.id||"";document.querySelector("#modalTitle").textContent=r?"맛집 수정":"맛집 등록";
- if(r){fName.value=r.name;fGu.value=r.gu;fDong.value=r.dong;fCat.value=r.cat;fMenu.value=r.menu;fUrl.value=r.url==="#"?"":r.url;fNote.value=r.note}
- else if(gu!=="전체") fGu.value=gu;
- dlg.showModal();
+const fromDb=r=>({id:String(r.id),name:r.name||"",gu:r.gu||"",dong:r.dong||"",cat:r.category||"기타",menu:r.menu||"",note:r.note||"",url:r.blog_url||"#"});
+function authUI(){const a=!!session;addBtn.hidden=!a;loginBtn.hidden=a;logoutBtn.hidden=!a;authState.textContent=a?"관리자 로그인 중":"";render()}
+function render(){
+ const q=search.value.trim().toLowerCase(),base=restaurants.filter(r=>gu==="전체"||r.gu===gu),ds=[...new Set(base.map(r=>r.dong).filter(Boolean))].sort();dongs.innerHTML="";
+ if(gu!=="전체")["전체",...ds].forEach(d=>{let b=document.createElement("button");b.className="chip"+(dong===d?" active":"");b.textContent=d;b.onclick=()=>{dong=d;render()};dongs.appendChild(b)});
+ const list=base.filter(r=>(dong==="전체"||r.dong===dong)&&(!q||[r.name,r.gu,r.dong,r.cat,r.menu,r.note].join(" ").toLowerCase().includes(q)));
+ title.textContent=(gu==="전체"?"부산 전체":gu)+(dong==="전체"?"":" · "+dong)+" 맛집";count.textContent=list.length+"곳";
+ cards.innerHTML=list.length?list.map(r=>`<article class="card"><span class="badge">${esc(r.cat)}</span><h3>${esc(r.name)}</h3><div class="meta">📍 ${esc(r.gu)} ${esc(r.dong)}<br>🍴 ${esc(r.menu)}</div><div class="review">${esc(r.note)}</div>${r.url&&r.url!=="#"?`<a class="link" href="${esc(r.url)}" target="_blank" rel="noopener">블로그 후기 보기 →</a>`:""}${session?`<div class="card-actions"><button class="mini" onclick="editRestaurant('${r.id}')">수정</button><button class="mini" onclick="deleteRestaurant('${r.id}')">삭제</button></div>`:""}</article>`).join(""):`<div class="empty">아직 등록된 맛집이 없습니다.</div>`;
 }
-document.querySelector("#addBtn").onclick=()=>openForm();
-document.querySelector("#cancelBtn").onclick=()=>dlg.close();
-form.onsubmit=e=>{
- e.preventDefault();const id=document.querySelector("#editId").value;
- const r=normalized({id:id||uid(),name:fName.value.trim(),gu:fGu.value,dong:fDong.value.trim(),cat:fCat.value.trim()||"기타",menu:fMenu.value.trim(),url:fUrl.value.trim()||"#",note:fNote.value.trim()});
- if(id){const i=restaurants.findIndex(x=>x.id===id);if(i>=0)restaurants[i]=r}else restaurants.unshift(r);
- save();dlg.close();render();
-};
-window.editRestaurant=id=>{const r=restaurants.find(x=>x.id===id);if(r)openForm(r)};
-window.deleteRestaurant=id=>{const r=restaurants.find(x=>x.id===id);if(r&&confirm(`'${r.name}' 맛집을 삭제할까요?`)){restaurants=restaurants.filter(x=>x.id!==id);save();render()}};
-document.querySelector("#exportBtn").onclick=()=>{
- const blob=new Blob([JSON.stringify(restaurants,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kkukku-foodmap-backup.json";a.click();URL.revokeObjectURL(a.href);
+async function loadRestaurants(){const {data,error}=await db.from("restaurants").select("*").order("created_at",{ascending:false});if(error){alert("맛집 불러오기 오류: "+error.message);return}restaurants=(data||[]).map(fromDb);render()}
+document.querySelectorAll(".region").forEach(r=>r.onclick=()=>{gu=r.dataset.gu;dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.toggle("active",x===r));all.classList.remove("active");render()});
+all.onclick=()=>{gu="전체";dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.remove("active"));all.classList.add("active");render()};search.oninput=render;
+function openForm(r=null){form.reset();editId.value=r?.id||"";modalTitle.textContent=r?"맛집 수정":"맛집 등록";if(r){fName.value=r.name;fGu.value=r.gu;fDong.value=r.dong;fCat.value=r.cat;fMenu.value=r.menu;fUrl.value=r.url==="#"?"":r.url;fNote.value=r.note}else if(gu!=="전체")fGu.value=gu;dlg.showModal()}
+addBtn.onclick=()=>openForm();cancelBtn.onclick=()=>dlg.close();
+form.onsubmit=async e=>{e.preventDefault();if(!session)return alert("관리자 로그인이 필요합니다.");const id=editId.value,row={name:fName.value.trim(),gu:fGu.value,dong:fDong.value.trim(),category:fCat.value.trim()||"기타",menu:fMenu.value.trim(),blog_url:fUrl.value.trim()||null,note:fNote.value.trim()};const res=id?await db.from("restaurants").update(row).eq("id",id):await db.from("restaurants").insert(row);if(res.error)return alert("저장 오류: "+res.error.message);dlg.close();await loadRestaurants()};
+window.editRestaurant=id=>{const r=restaurants.find(x=>x.id===String(id));if(r)openForm(r)};
+window.deleteRestaurant=async id=>{const r=restaurants.find(x=>x.id===String(id));if(r&&confirm(`'${r.name}' 맛집을 삭제할까요?`)){const {error}=await db.from("restaurants").delete().eq("id",id);if(error)return alert("삭제 오류: "+error.message);await loadRestaurants()}};
+loginBtn.onclick=()=>loginDialog.showModal();loginCancel.onclick=()=>loginDialog.close();
+loginForm.onsubmit=async e=>{e.preventDefault();const {data,error}=await db.auth.signInWithPassword({email:loginEmail.value.trim(),password:loginPassword.value});if(error)return alert("로그인 실패: 이메일/비밀번호를 확인하세요.");session=data.session;loginDialog.close();authUI()};
+logoutBtn.onclick=async()=>{await db.auth.signOut();session=null;authUI()};
+(async()=>{const {data}=await db.auth.getSession();session=data.session;authUI();await loadRestaurants()})();
+</script>ref);
 };
 document.querySelector("#importBtn").onclick=()=>document.querySelector("#importFile").click();
 document.querySelector("#importFile").onchange=async e=>{
