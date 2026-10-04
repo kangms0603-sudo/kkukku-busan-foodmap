@@ -1,147 +1,48 @@
-<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>꾸꾸의 부산 맛지도 | 부산 로컬 맛집</title>
-<meta name="description" content="맛지도 제작자 꾸꾸가 직접 다녀온 부산 로컬 맛집을 구·군과 동네별로 찾아보는 부산 맛지도입니다.">
 <style>
-:root{--bg:#fffaf3;--ink:#28231f;--sub:#766e67;--accent:#e55d3c;--sea:#dff3f3;--land:#f3d3a3;--line:#fff}
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink)}
-header{text-align:center;padding:28px 16px 15px}h1{margin:0;font-size:28px}header p{color:var(--sub);margin:8px 0 0}
-.wrap{max-width:900px;margin:auto;padding:14px} .search{width:100%;padding:15px;border:1px solid #eadfd5;border-radius:16px;font-size:16px;background:#fff}
-.mapbox{margin-top:15px;background:var(--sea);border-radius:26px;padding:8px;box-shadow:0 8px 24px #735c4620}
-svg{width:100%;height:auto;display:block} .region polygon{fill:var(--land);stroke:var(--line);stroke-width:3;cursor:pointer;transition:.15s}
-.region:hover polygon,.region.active polygon{fill:var(--accent)} .region text{font-size:12px;font-weight:800;text-anchor:middle;dominant-baseline:middle;pointer-events:none;fill:#493c32}
-.region:hover text,.region.active text{fill:#fff} .sea-label{fill:#6ba9ad;font-size:12px;font-weight:700;letter-spacing:3px}
-.note{font-size:12px;color:var(--sub);margin:9px 4px 0;line-height:1.5}
-.controls{display:flex;gap:8px;overflow:auto;padding:15px 0 4px}button{font:inherit}.chip{border:1px solid #eadfd5;background:#fff;border-radius:999px;padding:9px 13px;white-space:nowrap}.chip.active{background:var(--ink);color:white}
-.head{display:flex;justify-content:space-between;align-items:end;margin:20px 2px 10px}.head h2{margin:0;font-size:21px}.head span{font-size:13px;color:var(--sub)}.dongs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:white;border:1px solid #eadfd5;border-radius:18px;padding:16px}.badge{font-size:12px;background:#fff0e8;color:#ad4028;border-radius:99px;padding:5px 8px}.card h3{margin:10px 0 5px}.meta{font-size:13px;color:var(--sub);line-height:1.6}.review{font-size:14px;margin-top:9px;line-height:1.55}.link{display:inline-block;margin-top:11px;color:var(--accent);font-weight:800;text-decoration:none}.empty{grid-column:1/-1;text-align:center;padding:28px;color:var(--sub)}footer{text-align:center;color:#978c83;font-size:12px;padding:32px}
-
-.addbar{display:flex;gap:8px;margin:16px 0 6px}.primary{border:0;background:var(--accent);color:#fff;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer}.secondary{border:1px solid #eadfd5;background:#fff;border-radius:14px;padding:12px 14px;cursor:pointer}
-.cardimg{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:13px;margin-bottom:12px;background:#f3eee8}.stars{font-size:14px;margin-top:7px}.actions{display:flex;gap:7px;margin-top:12px}.mini{border:1px solid #eadfd5;background:#fff;border-radius:10px;padding:7px 9px;font-size:12px;cursor:pointer}
-dialog{border:0;border-radius:22px;padding:0;width:min(92vw,520px);box-shadow:0 24px 80px #0004}dialog::backdrop{background:#0006}.modal{padding:20px}.modal h2{margin:0 0 15px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formgrid .full{grid-column:1/-1}.formgrid label{font-size:12px;color:var(--sub);display:block;margin-bottom:5px}.formgrid input,.formgrid select,.formgrid textarea{width:100%;border:1px solid #e5d9ce;border-radius:11px;padding:11px;font:inherit;background:#fff}.formgrid textarea{min-height:76px;resize:vertical}.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.hint{font-size:12px;color:var(--sub);line-height:1.5;margin:10px 0 0}.photoPreview{display:none;width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin-top:8px}
-@media(max-width:600px){.formgrid{grid-template-columns:1fr}}
-
-@media(max-width:600px){.grid{grid-template-columns:1fr}.region text{font-size:11px}}
-</style></head><body>
-<header><h1>🍚 꾸꾸의 부산 맛지도</h1><p>부산 16개 구·군 → 동네 → 방문 맛집 순서로 찾아보세요.</p></header>
-<main class="wrap">
+:root{--bg:#fffaf3;--ink:#28231f;--sub:#766e67;--accent:#e55d3c;--sea:#dff3f3;--land:#f3d3a3}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink)}header{text-align:center;padding:26px 14px 12px}h1{margin:0;font-size:28px}header p{color:var(--sub)}.wrap{max-width:900px;margin:auto;padding:14px}.search{width:100%;padding:15px;border:1px solid #eadfd5;border-radius:16px;font-size:16px}.mapbox{margin-top:15px;background:var(--sea);border-radius:26px;padding:8px;box-shadow:0 8px 24px #735c4620}svg{width:100%;height:auto;display:block}.region path{fill:var(--land);stroke:#fff;stroke-width:2;cursor:pointer;transition:.15s}.region:hover path,.region.active path{fill:var(--accent)}.region text{font-size:15px;font-weight:800;text-anchor:middle;dominant-baseline:middle;pointer-events:none;fill:#493c32;paint-order:stroke;stroke:#fffaf3;stroke-width:3px}.region:hover text,.region.active text{fill:#fff;stroke:var(--accent)}.note{font-size:12px;color:var(--sub);line-height:1.5}.controls,.dongs{display:flex;gap:7px;overflow:auto;padding:10px 0;flex-wrap:wrap}.chip{border:1px solid #eadfd5;background:#fff;border-radius:999px;padding:9px 13px;white-space:nowrap}.chip.active{background:var(--ink);color:#fff}.head{display:flex;justify-content:space-between;align-items:end;margin:18px 2px 10px}.head h2{margin:0}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:#fff;border:1px solid #eadfd5;border-radius:18px;padding:16px}.badge{font-size:12px;background:#fff0e8;color:#ad4028;border-radius:99px;padding:5px 8px}.card h3{margin:10px 0 5px}.meta{font-size:13px;color:var(--sub);line-height:1.7}.review{font-size:14px;margin-top:8px}.link{display:inline-block;margin-top:10px;color:var(--accent);font-weight:800;text-decoration:none}.empty{grid-column:1/-1;text-align:center;padding:30px;color:var(--sub)}footer{text-align:center;color:#978c83;font-size:12px;padding:30px}@media(max-width:600px){.grid{grid-template-columns:1fr}.region text{font-size:13px}}
+</style></head><body><header><h1>🍚 꾸꾸의 부산 맛지도</h1><p>실제 부산 16개 구·군 → 동네 → 방문 맛집</p></header><main class="wrap">
 <input id="search" class="search" placeholder="식당명 · 동네 · 메뉴 검색">
-<div class="mapbox"><svg viewBox="20 10 520 425" role="img" aria-label="부산광역시 16개 구군 맛지도">
-<text class="sea-label" x="415" y="385">BUSAN SEA</text>
-<g class="region" data-gu="강서구" tabindex="0"><polygon points="70,195 165,178 198,218 181,305 135,335 82,300 45,245"/><text x="125" y="254">강서구</text></g>
-<g class="region" data-gu="북구" tabindex="0"><polygon points="180,112 236,98 258,154 230,207 190,197 164,161"/><text x="210" y="155">북구</text></g>
-<g class="region" data-gu="금정구" tabindex="0"><polygon points="250,58 326,42 357,94 337,166 281,169 253,137"/><text x="301" y="111">금정구</text></g>
-<g class="region" data-gu="기장군" tabindex="0"><polygon points="349,35 457,25 516,70 510,150 467,192 402,169 361,116"/><text x="437" y="108">기장군</text></g>
-<g class="region" data-gu="사상구" tabindex="0"><polygon points="181,205 232,202 253,258 224,305 179,294 163,250"/><text x="205" y="252">사상구</text></g>
-<g class="region" data-gu="부산진구" tabindex="0"><polygon points="237,190 291,178 320,224 297,276 248,263 226,220"/><text x="270" y="225">부산진구</text></g>
-<g class="region" data-gu="동래구" tabindex="0"><polygon points="292,151 345,147 366,192 340,226 307,216 286,179"/><text x="323" y="185">동래구</text></g>
-<g class="region" data-gu="연제구" tabindex="0"><polygon points="314,219 361,201 386,239 361,272 315,266 299,239"/><text x="339" y="239">연제구</text></g>
-<g class="region" data-gu="해운대구" tabindex="0"><polygon points="372,169 449,160 487,206 462,260 398,259 369,224"/><text x="423" y="213">해운대구</text></g>
-<g class="region" data-gu="사하구" tabindex="0"><polygon points="142,305 218,306 236,354 201,397 136,384 105,345"/><text x="173" y="348">사하구</text></g>
-<g class="region" data-gu="서구" tabindex="0"><polygon points="220,302 257,292 274,332 250,365 217,351"/><text x="244" y="328">서구</text></g>
-<g class="region" data-gu="중구" tabindex="0"><polygon points="259,288 282,284 294,314 275,334 259,320"/><text x="274" y="308">중구</text></g>
-<g class="region" data-gu="동구" tabindex="0"><polygon points="282,264 316,262 329,302 299,320 283,299"/><text x="302" y="289">동구</text></g>
-<g class="region" data-gu="남구" tabindex="0"><polygon points="315,285 371,275 397,321 369,355 321,337 299,309"/><text x="345" y="314">남구</text></g>
-<g class="region" data-gu="수영구" tabindex="0"><polygon points="369,260 406,255 427,287 400,315 378,299"/><text x="396" y="283">수영구</text></g>
-<g class="region" data-gu="영도구" tabindex="0"><polygon points="269,337 324,338 347,382 307,414 261,390 246,359"/><text x="292" y="370">영도구</text></g>
-</svg></div>
-<p class="note">※ 구·군을 누르면 아래에 동네 목록이 나타납니다. 맛집 탐색용으로 단순화한 지도이며 실제 경계·면적 측량용 지도가 아닙니다.</p>
-<div class="controls"><button class="chip" id="allBusan">📍 부산 전체</button></div><div class="controls" id="filters"></div>
-
-<div class="addbar">
-<button class="primary" id="addRestaurant">＋ 맛집 추가</button>
-<button class="secondary" id="backupBtn">데이터 내보내기</button>
-<label class="secondary" style="cursor:pointer">가져오기<input id="importFile" type="file" accept=".json" hidden></label>
-</div>
-<dialog id="editor">
-<form method="dialog" class="modal" id="restaurantForm">
-<h2 id="editorTitle">맛집 추가</h2>
-<input type="hidden" id="editId">
-<div class="formgrid">
-<div><label>상호명 *</label><input id="fName" required></div>
-<div><label>카테고리</label><select id="fCat"><option>한식</option><option>고기</option><option>국밥</option><option>회·해산물</option><option>면</option><option>카페</option><option>중식</option><option>일식</option><option>기타</option></select></div>
-<div><label>구·군 *</label><select id="fGu" required></select></div>
-<div><label>동·읍·면 *</label><select id="fDong" required></select></div>
-<div class="full"><label>대표메뉴</label><input id="fMenu" placeholder="예: 낙곱새"></div>
-<div><label>내 평가 (1~5)</label><select id="fRating"><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
-<div><label>방문일</label><input id="fDate" type="date"></div>
-<div class="full"><label>한줄평</label><textarea id="fNote" placeholder="직접 먹어본 느낌을 짧게 기록하세요."></textarea></div>
-<div class="full"><label>네이버 블로그 후기 주소</label><input id="fUrl" type="url" placeholder="https://..."></div>
-<div class="full"><label>대표사진</label><input id="fPhoto" type="file" accept="image/*"><img id="photoPreview" class="photoPreview"><input type="hidden" id="photoData"></div>
-</div>
-<p class="hint">사진은 브라우저 저장공간을 사용하므로 너무 큰 사진은 자동으로 축소해 저장합니다. 이 버전의 데이터는 현재 브라우저에 저장됩니다.</p>
-<div class="modalfoot"><button class="secondary" value="cancel">취소</button><button class="primary" id="saveRestaurant" value="default">저장</button></div>
-</form></dialog>
-
-<div class="head"><h2 id="title">부산 전체 맛집</h2><span id="count"></span></div>
-<div class="dongs" id="dongs"></div><div class="grid" id="cards"></div>
+<div class="mapbox"><svg viewBox="0 0 800 757" aria-label="부산광역시 실제 행정경계 맛지도"><g class="region" data-gu="강서구" tabindex="0"><path d="M 214.62 609.26 227.87 609.87 223.25 619.24 214.62 609.26 Z M 164.94 606.42 151.93 604.64 140.17 598.92 150.12 590.91 175.68 597.21 164.94 606.42 Z M 116.69 613.13 118.78 609.11 102.12 600.39 110.39 596.3 129.42 596.72 134.82 604.97 116.69 613.13 Z M 115.86 614.73 122.25 627.97 124.43 646.78 121.14 661.13 113.28 673.24 100.46 704.61 109.73 710.77 104.82 729.46 83.1 734.55 81.81 722.84 88.8 703.63 83.06 693.51 68.33 688.84 63.44 681.67 70.65 673.07 59.24 667.32 65.54 659.8 65.81 651.27 55.54 637.59 46.66 637.25 41.23 626.88 33.27 626.97 32.98 611.77 37.31 605.85 95.34 593.21 95.17 581.64 63.67 582.12 63.52 572.19 74.12 572.02 85.98 565.96 89.31 559.02 99.16 565.48 99.75 600.56 95.94 617.33 104.9 625.44 115.86 614.73 Z M 76.81 546.94 80.94 537.48 99.33 536.53 108.54 529.32 110.26 516.12 99.6 505.77 102.14 496.34 94.78 485.49 68.13 480.9 47.96 464.13 47.3 455.52 34.82 436.26 53.15 430 68.38 430.31 85.93 438.48 98.63 431.79 109.11 433.76 114 421.38 134.21 414.71 145.74 415.39 152.66 421.6 148.69 432.01 166.24 430.26 159.53 419.64 165.56 408.16 166.52 387.35 158.9 378.77 158.39 369.43 149.36 353.14 162.16 337.46 172.72 329.22 188.95 331.2 206.26 324.4 212.35 313.75 224.01 324.78 237.64 317.95 253.36 304.46 266.58 307.96 303 303.76 328.45 295.22 338.96 286.96 341.25 292.75 337.68 328.77 334.37 340.94 326.32 350.78 310.46 365.96 294.4 376.17 289.95 384.07 289.86 419.46 286.91 437.19 285.71 470.49 273.27 484.7 268.19 496.38 258.83 504.06 249.64 520.07 243.05 529.54 242.44 551.84 222.47 557.63 215.56 563.86 214.12 577.59 190.09 577.96 189.89 564.58 195.55 542.35 197.43 517.92 204.7 505.82 192.57 501.89 180.59 524.94 178.57 557.36 171.93 572 173.01 577.47 152.24 575 149.14 570.62 102.51 570.76 99.15 561.73 94.46 561.88 76.81 546.94 Z"/><text x="180" y="445">강서구</text></g>
+<g class="region" data-gu="금정구" tabindex="0"><path d="M 561.28 256.13 554.18 275.45 541.3 285.14 535.5 300.31 526.03 302.65 520.73 311.8 524.03 321.29 510.73 331.94 503.02 331.81 473.91 316.29 475.76 310.97 461.91 303.97 437.22 304.26 410.77 295.77 419.61 276.23 412.21 265.21 416.44 250.54 398.29 241.26 406.89 234.7 407.62 226.02 414.32 215.73 423.67 199.68 421.02 194.22 429.78 177.92 447.88 178.21 453.16 184.55 478.31 161.03 487.61 160.79 500.8 154.96 505.39 158.47 526.81 163.85 537.15 169.54 539.5 178.33 529.68 200.92 532.46 205.97 524.83 226.74 527.86 236.94 553.49 240.3 551.71 250.14 561.28 256.13 Z"/><text x="475" y="235">금정구</text></g>
+<g class="region" data-gu="기장군" tabindex="0"><path d="M 659.61 381.22 656.91 353.93 644.78 349 628.81 368.28 624.56 357.06 604.29 344.95 600.59 347.3 586 337.57 586.27 327.47 592.98 321.37 598.83 298.06 586.34 284.05 578 283.54 579.22 268.1 567.5 265 561.28 256.13 551.71 250.14 553.49 240.3 527.86 236.94 524.83 226.74 532.46 205.97 529.68 200.92 539.5 178.33 537.15 169.54 526.81 163.85 505.39 158.47 511.01 148.16 510.45 134.92 520.02 124.2 530.69 105.04 527.67 96.54 535.62 77.45 541.82 74.19 541.05 62.88 529.61 50.33 537.37 45.12 564.08 47.83 582.81 56.43 585.45 61.16 602.97 70.22 608.75 70.02 619.88 57.34 631.3 52.23 639.25 42.43 639.58 25 630.98 13.92 639.44 1 648.2 9.48 668.6 19.03 686.07 14.7 693.92 16.19 701.04 8.63 711 11.31 720.03 3.64 728.49 8.33 735.77 5.55 764.86 42.38 762.58 59.15 769.41 69.12 761.79 86.46 780.34 94.5 793.05 95.71 799 106.39 796.82 122.98 791.94 128.22 777.43 128.2 775.23 119.34 763.73 113.73 745.18 123.04 736.02 134.58 730.18 153.4 734.94 178.18 732.86 191.91 727.54 199.2 724.05 215.57 712.77 214.18 709.26 229.3 698.29 228.24 699.19 241.27 709.8 237.54 723.76 237.97 723.81 263.95 712.22 265.74 710.03 276.93 713.13 289.44 707.49 293.59 704.9 308.39 692.16 309.89 679.18 324.88 691.54 340 691.97 350.78 684.25 355.11 682.03 375.21 668.68 372.53 659.61 381.22 Z"/><text x="675" y="175">기장군</text></g>
+<g class="region" data-gu="남구" tabindex="0"><path d="M 515.54 467.55 528.51 471.81 534.42 490.48 541.74 500.49 534.51 535.43 517.06 529.46 498.25 550.78 491.49 545.93 483.88 528.15 460.7 528.51 449.08 520.3 452.16 509.57 458.51 504.39 457.22 494.46 445.56 493.34 445.7 482.11 443.83 459.32 441.71 445.78 452.98 446.76 464.88 442.21 470.95 428.1 489.83 422.02 498.86 439.28 500.54 456.08 515.54 467.55 Z"/><text x="490" y="485">남구</text></g>
+<g class="region" data-gu="동구" tabindex="0"><path d="M 443.83 459.32 445.7 482.11 431.72 502.49 426.03 498.02 418.22 505.75 423.9 512.82 413.85 521.92 410.09 515.8 395.91 505.99 388.6 507.73 384.3 503.52 386.17 490.54 385.29 470.81 404.95 461.97 408.47 451.15 424.49 457.99 443.83 459.32 Z"/><text x="410" y="490">동구</text></g>
+<g class="region" data-gu="동래구" tabindex="0"><path d="M 510.73 331.94 511.83 343.26 517.87 354.73 519.43 376.14 518.84 380.5 512.74 370.87 486.96 363.75 476.75 362.77 466.3 352.5 436.78 367.12 417.73 362.14 411.38 353.19 420.04 339.88 421.87 327.94 437.22 304.26 461.91 303.97 475.76 310.97 473.91 316.29 503.02 331.81 510.73 331.94 Z"/><text x="465" y="335">동래구</text></g>
+<g class="region" data-gu="부산진구" tabindex="0"><path d="M 411.38 353.19 417.73 362.14 416.87 369.6 422.58 379.75 438.06 382.1 438.23 388.91 451.47 396.02 458.66 391.54 468.99 402.92 463.62 416.81 470.95 428.1 464.88 442.21 452.98 446.76 441.71 445.78 443.83 459.32 424.49 457.99 408.47 451.15 404.95 461.97 385.29 470.81 364.94 467.78 370.91 456.92 371.29 439.51 361.97 428.73 365.23 414.4 361.52 401.5 374.45 388.64 376.96 375.72 390.87 359.25 399.63 353.91 411.38 353.19 Z"/><text x="400" y="415">부산진구</text></g>
+<g class="region" data-gu="북구" tabindex="0"><path d="M 414.32 215.73 407.62 226.02 406.89 234.7 398.29 241.26 416.44 250.54 412.21 265.21 419.61 276.23 410.77 295.77 437.22 304.26 421.87 327.94 420.04 339.88 411.38 353.19 399.63 353.91 390.87 359.25 376.96 375.72 357.09 374.83 335.65 361.9 326.7 360.99 326.32 350.78 334.37 340.94 337.68 328.77 341.25 292.75 338.96 286.96 341.98 283.24 368.53 214.15 388.92 211.23 414.32 215.73 Z"/><text x="355" y="300">북구</text></g>
+<g class="region" data-gu="사상구" tabindex="0"><path d="M 376.96 375.72 374.45 388.64 361.52 401.5 365.23 414.4 361.97 428.73 371.29 439.51 370.91 456.92 364.94 467.78 353.13 469.91 351.02 490.32 346.59 494.18 327.25 492.71 317.06 505.94 310.75 506.13 282.75 493.22 289.65 472.33 285.71 470.49 286.91 437.19 289.86 419.46 289.95 384.07 294.4 376.17 310.46 365.96 326.32 350.78 326.7 360.99 335.65 361.9 357.09 374.83 376.96 375.72 Z"/><text x="325" y="430">사상구</text></g>
+<g class="region" data-gu="사하구" tabindex="0"><path d="M 278.4 607.79 274.79 618.74 283.49 630.29 255.76 633.3 243.71 614.12 264.69 585.01 278.4 607.79 Z M 287.51 629.44 284.81 624.46 273.13 571.51 280.13 545.61 281.6 527.19 270.17 524.96 268.42 540.05 262.07 563.22 246.84 586 240.3 578.17 245.16 566.47 246.49 541.37 251.17 526.8 249.64 520.07 258.83 504.06 268.19 496.38 273.27 484.7 285.71 470.49 289.65 472.33 282.75 493.22 310.75 506.13 317.06 505.94 327.25 492.71 346.59 494.18 352.65 516.16 363.28 526.22 358.64 534.61 369.23 548.09 365.12 579.31 354.94 576.42 355.95 565.39 337.58 566.57 340.67 581.58 341.61 604.29 351.16 631.75 346.99 639.07 337.8 637.72 331.21 614.41 325.44 611.16 314.65 616.98 318.36 632.45 308.25 630.8 300.41 642.41 287.51 629.44 Z"/><text x="305" y="555">사하구</text></g>
+<g class="region" data-gu="서구" tabindex="0"><path d="M 364.94 467.78 385.29 470.81 386.17 490.54 384.3 503.52 388.6 507.73 389.62 513.5 381.14 522.58 380.04 532.86 387.56 544.24 388.14 563.88 385.42 579.84 373.92 584.39 380.59 592.15 382.38 606.44 366.51 624 362.07 609.35 365.44 604.6 356.72 589.89 354.94 576.42 365.12 579.31 369.23 548.09 358.64 534.61 363.28 526.22 352.65 516.16 346.59 494.18 351.02 490.32 353.13 469.91 364.94 467.78 Z"/><text x="370" y="525">서구</text></g>
+<g class="region" data-gu="수영구" tabindex="0"><path d="M 519.43 376.14 535.87 413.87 543.39 421.23 548.26 433.44 533.63 436.65 520.69 443.55 524.17 459.82 515.54 467.55 500.54 456.08 498.86 439.28 489.83 422.02 483.91 414.44 492.12 403.03 491.83 390.25 502.11 386.46 513.47 394.88 518.84 380.5 519.43 376.14 Z"/><text x="525" y="415">수영구</text></g>
+<g class="region" data-gu="연제구" tabindex="0"><path d="M 518.84 380.5 513.47 394.88 502.11 386.46 491.83 390.25 492.12 403.03 483.91 414.44 489.83 422.02 470.95 428.1 463.62 416.81 468.99 402.92 458.66 391.54 451.47 396.02 438.23 388.91 438.06 382.1 422.58 379.75 416.87 369.6 417.73 362.14 436.78 367.12 466.3 352.5 476.75 362.77 486.96 363.75 512.74 370.87 518.84 380.5 Z"/><text x="465" y="385">연제구</text></g>
+<g class="region" data-gu="영도구" tabindex="0"><path d="M 442.18 529.82 436.85 534.81 451.07 542.86 467.83 563.09 474.25 580.61 487.9 570.99 491.17 577.97 477.91 582.49 478.48 599.32 493.11 611.78 486.28 625.4 473.88 625.98 465.52 608.02 446.1 605.4 447.43 594.55 434.43 591.69 399.96 563.65 394.91 547.73 406.38 545.55 442.18 529.82 Z"/><text x="445" y="570">영도구</text></g>
+<g class="region" data-gu="중구" tabindex="0"><path d="M 413.85 521.92 413.3 529.56 404.53 541.88 387.56 544.24 380.04 532.86 381.14 522.58 389.62 513.5 388.6 507.73 395.91 505.99 410.09 515.8 413.85 521.92 Z"/><text x="400" y="525">중구</text></g>
+<g class="region" data-gu="해운대구" tabindex="0"><path d="M 659.61 381.22 649.57 385.23 643.59 393.88 642.58 412.87 635.34 421.3 620.27 431.75 602.38 424.42 579.59 429.85 577.05 438.03 561.57 433.58 555.37 420.96 543.39 421.23 535.87 413.87 519.43 376.14 517.87 354.73 511.83 343.26 510.73 331.94 524.03 321.29 520.73 311.8 526.03 302.65 535.5 300.31 541.3 285.14 554.18 275.45 561.28 256.13 567.5 265 579.22 268.1 578 283.54 586.34 284.05 598.83 298.06 592.98 321.37 586.27 327.47 586 337.57 600.59 347.3 604.29 344.95 624.56 357.06 628.81 368.28 644.78 349 656.91 353.93 659.61 381.22 Z"/><text x="590" y="355">해운대구</text></g></svg></div>
+<p class="note">※ 부산광역시 시·군·구 행정경계 형태를 적용한 웹용 맛지도입니다. 구·군을 누르면 해당 지역 맛집이 표시됩니다.</p>
+<div class="controls"><button class="chip active" id="all">📍 부산 전체</button></div>
+<div class="head"><h2 id="title">부산 전체 맛집</h2><span id="count"></span></div><div class="dongs" id="dongs"></div><div class="grid" id="cards"></div>
 </main><footer>맛지도 제작자 꾸꾸 · BUSAN FOOD MAP</footer>
 <script>
-const defaultRestaurants=[
-{name:"개미집",gu:"연제구",dong:"거제동",cat:"한식",menu:"낙곱새",note:"거제동 방문 맛집. 블로그 후기 주소를 연결할 수 있습니다.",url:"#"},
-{name:"수매풍",gu:"연제구",dong:"거제동",cat:"한식",menu:"대표메뉴 입력",note:"방문 정보를 수정해 주세요.",url:"#"},
-{name:"동래밀면",gu:"동래구",dong:"수안동",cat:"면",menu:"밀면",note:"부산 밀면 맛집 기록.",url:"#"}
+const restaurants=[
+{name:"개미집",gu:"연제구",dong:"거제동",cat:"한식",menu:"낙곱새",note:"거제동 방문 맛집.",url:"#"},
+{name:"수매풍",gu:"연제구",dong:"거제동",cat:"한식",menu:"대표메뉴 입력",note:"방문 정보를 추가해 주세요.",url:"#"},
+{name:"동래밀면",gu:"동래구",dong:"수안동",cat:"밀면·면요리",menu:"물밀면 · 비빔밀면 · 만두",note:"부산 수안동 밀면 맛집 기록.",url:"https://m.blog.naver.com/ntop8153/224363038507"},
+{name:"돼지 한마리",gu:"동래구",dong:"수안동",cat:"고기",menu:"삼겹살",note:"수안동에서 즐기는 돼지고기 맛집.",url:"https://m.blog.naver.com/ntop8153/224355697527"}
 ];
-let restaurants=JSON.parse(localStorage.getItem("kkukkuRestaurantsV4")||"null")||defaultRestaurants.map((r,i)=>({...r,id:"sample"+i,rating:5,date:"",photo:""}));
-const districtDongs={
-"중구":["중앙동","동광동","대청동","보수동","부평동","광복동","남포동","영주동"],
-"서구":["동대신동","서대신동","부민동","아미동","초장동","충무동","남부민동","암남동"],
-"동구":["초량동","수정동","좌천동","범일동"],
-"영도구":["대교동","대평동","남항동","영선동","신선동","봉래동","청학동","동삼동"],
-"부산진구":["부전동","연지동","초읍동","양정동","전포동","부암동","당감동","가야동","개금동","범천동"],
-"동래구":["수안동","명륜동","온천동","복천동","칠산동","낙민동","안락동","명장동","사직동"],
-"남구":["대연동","용호동","용당동","감만동","우암동","문현동"],
-"북구":["구포동","금곡동","화명동","덕천동","만덕동"],
-"해운대구":["우동","중동","좌동","송정동","반여동","반송동","석대동","재송동"],
-"사하구":["괴정동","당리동","하단동","신평동","장림동","다대동","구평동","감천동"],
-"금정구":["두구동","노포동","청룡동","남산동","선동","오륜동","구서동","장전동","부곡동","서동","금사동","회동동","금성동"],
-"강서구":["대저1동","대저2동","강동동","명지동","죽림동","식만동","죽동동","봉림동","송정동","화전동","녹산동","생곡동","구랑동","지사동","미음동","범방동","신호동","동선동","성북동","눌차동","천성동","대항동"],
-"연제구":["거제동","연산동"],
-"수영구":["망미동","수영동","민락동","광안동","남천동"],
-"사상구":["삼락동","모라동","덕포동","괘법동","감전동","주례동","학장동","엄궁동"],
-"기장군":["기장읍","장안읍","정관읍","일광읍","철마면"]
-};
-const cats=["전체","한식","고기","국밥","회·해산물","면","카페"];
-let gu="전체",dong="전체",cat="전체";
-const filters=document.querySelector("#filters"),dongs=document.querySelector("#dongs"),cards=document.querySelector("#cards");
-cats.forEach(c=>{const b=document.createElement("button");b.className="chip"+(c==="전체"?" active":"");b.textContent=c;b.onclick=()=>{cat=c;[...filters.children].forEach(x=>x.classList.toggle("active",x.textContent===c));render()};filters.appendChild(b)});
-document.querySelectorAll(".region").forEach(r=>{const go=()=>{gu=gu===r.dataset.gu?"전체":r.dataset.gu;dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.toggle("active",x.dataset.gu===gu));render()};r.onclick=go;r.onkeydown=e=>{if(e.key==="Enter"||e.key===" ")go()}});
-document.querySelector("#allBusan").onclick=()=>{gu="전체";dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.remove("active"));render()};
-document.querySelector("#search").oninput=render;
+let gu="전체",dong="전체";const cards=document.querySelector("#cards"),dongs=document.querySelector("#dongs");
 function render(){
  const q=document.querySelector("#search").value.trim().toLowerCase();
- let base=restaurants.filter(r=>(gu==="전체"||r.gu===gu)&&(cat==="전체"||r.cat===cat));
- const ds=gu==="전체"?[]:(districtDongs[gu]||[]); dongs.innerHTML="";
- if(gu!=="전체")["전체",...ds].forEach(d=>{const b=document.createElement("button");b.className="chip"+(dong===d?" active":"");b.textContent=d;b.onclick=()=>{dong=d;render()};dongs.appendChild(b)});
+ let base=restaurants.filter(r=>gu==="전체"||r.gu===gu);
+ const ds=[...new Set(base.map(r=>r.dong))];dongs.innerHTML="";
+ if(gu!=="전체")["전체",...ds].forEach(d=>{let b=document.createElement("button");b.className="chip"+(dong===d?" active":"");b.textContent=d;b.onclick=()=>{dong=d;render()};dongs.appendChild(b)});
  const list=base.filter(r=>(dong==="전체"||r.dong===dong)&&(!q||[r.name,r.gu,r.dong,r.cat,r.menu].join(" ").toLowerCase().includes(q)));
- document.querySelector("#title").textContent=(gu==="전체"?"부산 전체":gu)+(dong==="전체"?"":" · "+dong)+" 맛집";
- document.querySelector("#count").textContent=list.length+"곳";
- cards.innerHTML=list.length?list.map(r=>`<article class="card">${r.photo?`<img class="cardimg" src="${r.photo}" alt="${r.name}">`:""}<span class="badge">${r.cat}</span><h3>${r.name}</h3><div class="meta">📍 ${r.gu} ${r.dong}<br>🍴 ${r.menu||"대표메뉴 미입력"}${r.date?`<br>📅 ${r.date}`:""}</div><div class="stars">${"★".repeat(Number(r.rating||0))}${"☆".repeat(5-Number(r.rating||0))}</div><div class="review">${r.note||""}</div>${r.url&&r.url!=="#"?`<a class="link" href="${r.url}" target="_blank" rel="noopener">블로그 후기 보기 →</a>`:""}<div class="actions"><button class="mini" onclick="editRestaurant('${r.id}')">수정</button><button class="mini" onclick="deleteRestaurant('${r.id}')">삭제</button></div></article>`).join(""):`<div class="empty">📍 ${dong==="전체"?(gu==="전체"?"부산":gu):dong}<br><br>아직 등록된 맛집이 없습니다.<br><small>방문한 식당을 추가하면 이곳에 자동으로 표시됩니다.</small></div>`;
+ document.querySelector("#title").textContent=(gu==="전체"?"부산 전체":gu)+(dong==="전체"?"":" · "+dong)+" 맛집";document.querySelector("#count").textContent=list.length+"곳";
+ cards.innerHTML=list.length?list.map(r=>`<article class="card"><span class="badge">${r.cat}</span><h3>${r.name}</h3><div class="meta">📍 ${r.gu} ${r.dong}<br>🍴 ${r.menu}</div><div class="review">${r.note}</div>${r.url!=="#"?`<a class="link" href="${r.url}" target="_blank" rel="noopener">블로그 후기 보기 →</a>`:""}</article>`).join(""):`<div class="empty">아직 등록된 맛집이 없습니다.</div>`;
 }
-
-const editor=document.querySelector("#editor"), form=document.querySelector("#restaurantForm");
-const fGu=document.querySelector("#fGu"),fDong=document.querySelector("#fDong");
-function saveDB(){localStorage.setItem("kkukkuRestaurantsV4",JSON.stringify(restaurants))}
-function fillGu(){fGu.innerHTML=Object.keys(districtDongs).map(g=>`<option>${g}</option>`).join(""); if(gu!=="전체")fGu.value=gu; fillDong()}
-function fillDong(){const a=districtDongs[fGu.value]||[];fDong.innerHTML=a.map(d=>`<option>${d}</option>`).join(""); if(dong!=="전체"&&a.includes(dong))fDong.value=dong}
-fGu.onchange=fillDong;
-document.querySelector("#addRestaurant").onclick=()=>{form.reset();document.querySelector("#editId").value="";document.querySelector("#photoData").value="";document.querySelector("#photoPreview").style.display="none";document.querySelector("#editorTitle").textContent="맛집 추가";fillGu();editor.showModal()};
-document.querySelector("#fPhoto").onchange=async e=>{
- const file=e.target.files[0];if(!file)return;
- const img=new Image(), reader=new FileReader();
- reader.onload=()=>img.src=reader.result; reader.readAsDataURL(file);
- img.onload=()=>{const max=1000,scale=Math.min(1,max/img.width),c=document.createElement("canvas");c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext("2d").drawImage(img,0,0,c.width,c.height);const data=c.toDataURL("image/jpeg",.78);document.querySelector("#photoData").value=data;const p=document.querySelector("#photoPreview");p.src=data;p.style.display="block"};
-};
-document.querySelector("#saveRestaurant").onclick=e=>{
- e.preventDefault();if(!document.querySelector("#fName").value.trim()){alert("상호명을 입력해주세요.");return}
- const id=document.querySelector("#editId").value||("r"+Date.now());
- const item={id,name:document.querySelector("#fName").value.trim(),cat:document.querySelector("#fCat").value,gu:fGu.value,dong:fDong.value,menu:document.querySelector("#fMenu").value.trim(),rating:Number(document.querySelector("#fRating").value),date:document.querySelector("#fDate").value,note:document.querySelector("#fNote").value.trim(),url:document.querySelector("#fUrl").value.trim()||"#",photo:document.querySelector("#photoData").value};
- const i=restaurants.findIndex(x=>x.id===id);if(i>=0)restaurants[i]=item;else restaurants.unshift(item);saveDB();editor.close();gu=item.gu;dong=item.dong;document.querySelectorAll(".region").forEach(x=>x.classList.toggle("active",x.dataset.gu===gu));render()
-};
-window.editRestaurant=id=>{const r=restaurants.find(x=>x.id===id);if(!r)return;document.querySelector("#editId").value=r.id;document.querySelector("#editorTitle").textContent="맛집 수정";fillGu();fGu.value=r.gu;fillDong();fDong.value=r.dong;document.querySelector("#fName").value=r.name;document.querySelector("#fCat").value=r.cat;document.querySelector("#fMenu").value=r.menu||"";document.querySelector("#fRating").value=r.rating||5;document.querySelector("#fDate").value=r.date||"";document.querySelector("#fNote").value=r.note||"";document.querySelector("#fUrl").value=r.url==="#"?"":r.url||"";document.querySelector("#photoData").value=r.photo||"";const p=document.querySelector("#photoPreview");if(r.photo){p.src=r.photo;p.style.display="block"}else p.style.display="none";editor.showModal()};
-window.deleteRestaurant=id=>{const r=restaurants.find(x=>x.id===id);if(r&&confirm(`"${r.name}"을 맛지도에서 삭제할까요?`)){restaurants=restaurants.filter(x=>x.id!==id);saveDB();render()}};
-document.querySelector("#backupBtn").onclick=()=>{const blob=new Blob([JSON.stringify(restaurants,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="kkukku_busan_foodmap_backup.json";a.click();URL.revokeObjectURL(a.href)};
-document.querySelector("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!Array.isArray(d))throw 0;restaurants=d;saveDB();render();alert("맛집 데이터를 가져왔습니다.")}catch{alert("올바른 백업 파일이 아닙니다.")}};rd.readAsText(f)};
-
-render();
+document.querySelectorAll(".region").forEach(r=>{r.onclick=()=>{gu=r.dataset.gu;dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.toggle("active",x===r));document.querySelector("#all").classList.remove("active");render()}});
+document.querySelector("#all").onclick=()=>{gu="전체";dong="전체";document.querySelectorAll(".region").forEach(x=>x.classList.remove("active"));document.querySelector("#all").classList.add("active");render()};
+document.querySelector("#search").oninput=render;render();
 </script></body></html>
